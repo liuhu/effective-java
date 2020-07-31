@@ -21,7 +21,8 @@ public class AutoCloseableTest {
     }
 
     public void test() {
-        try (TestResource d = new TestResource()) {
+        try (TestResource d = new TestResource();
+             TestResource d2 = new TestResource()) {
             d.read();
         } catch (Exception e) {
             e.printStackTrace();
