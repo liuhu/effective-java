@@ -3,9 +3,9 @@ package me.liuhu.study.effective.java.exceptions;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -35,12 +35,25 @@ public class ThreadPoolExceptionTest {
         }));
 
         // submit 异常会吞掉，并且异常的线程不会退出
-        IntStream.range(15, 20).forEach(i -> pool.submit(() -> {
+        List<Future> task = IntStream.range(15, 20).mapToObj(i -> pool.submit(() -> {
             if (i == 18) {
                 throw new RuntimeException("error");
             }
             log.info("I'm done : {}", i);
-        }));
+        })).collect(Collectors.toList());
+
+        // 通过 submit 返回的 Future 获取执行状态，会返回异常信息
+        /**
+         * @see FutureTask#run()
+         */
+        task.forEach(x -> {
+            try {
+                log.info("Get result...");
+                x.get();
+            } catch (Exception e) {
+                log.error("Get ERROR", e);
+            }
+        });
 
         pool.shutdown();
         pool.awaitTermination(1, TimeUnit.DAYS);
