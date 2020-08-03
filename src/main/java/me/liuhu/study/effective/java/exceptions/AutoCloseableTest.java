@@ -11,12 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 public class AutoCloseableTest {
     public class TestResource implements AutoCloseable {
         public void read() throws Exception {
-            log.info("read resource ...");
+            throw new Exception("read error");
         }
 
         @Override
         public void close() throws Exception {
-            log.info("close resource ... ");
+            throw new Exception("close error");
         }
     }
 
@@ -25,7 +25,9 @@ public class AutoCloseableTest {
              TestResource d2 = new TestResource()) {
             d.read();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("error", e);
+        } finally {
+            log.info("finally ... ");
         }
     }
 
