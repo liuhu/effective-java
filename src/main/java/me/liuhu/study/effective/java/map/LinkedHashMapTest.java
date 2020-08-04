@@ -15,6 +15,8 @@ public class LinkedHashMapTest {
      * 需要打开 accessOrder 开关，实现LRU，可查看如下代码
      * @see LinkedHashMap#afterNodeAccess(HashMap.Node)
      *
+     * LinkedHashMap 的 Entry 继承了 Map.Entry，增加了 before, after
+     * @see LinkedHashMap.Entry
      * @param args
      */
     public static void main(String[] args) {
