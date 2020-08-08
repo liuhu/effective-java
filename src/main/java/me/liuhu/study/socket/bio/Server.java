@@ -23,8 +23,8 @@ public class Server {
         try(ServerSocket ss = new ServerSocket(18089)) {
             log.info("服务端启动成功， port {}", ss.getLocalPort());
             while (true) {
-                Socket socket = ss.accept();
-                Thread thread = new Thread(new Worker(socket));
+                Socket clientSocket = ss.accept();
+                Thread thread = new Thread(new Worker(clientSocket));
                 thread.start();
             }
         } catch (IOException e) {
